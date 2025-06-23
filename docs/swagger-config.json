@@ -1,0 +1,896 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sistema de Gerenciamento de Produtos - API REST",
+    "version": "2.0.0",
+    "description": "API completa para gerenciamento de produtos em loja de departamentos. Desenvolvida com Node.js, Express.js e MongoDB Atlas.",
+    "contact": {
+      "name": "José Eduardo Dias Rufino",
+      "email": "joseeduardo@email.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://sistemas-produtos-api.onrender.com",
+      "description": "Servidor de Produção"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Servidor de Desenvolvimento"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Produtos",
+      "description": "Operações relacionadas ao gerenciamento de produtos"
+    },
+    {
+      "name": "Sistema",
+      "description": "Informações do sistema e health check"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["Sistema"],
+        "summary": "Informações da API",
+        "description": "Retorna informações básicas sobre a API e endpoints disponíveis",
+        "responses": {
+          "200": {
+            "description": "Informações da API retornadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "api": {
+                      "type": "string",
+                      "example": "Sistema de Gerenciamento de Produtos"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "2.0.0"
+                    },
+                    "developer": {
+                      "type": "string",
+                      "example": "José Eduardo Dias Rufino"
+                    },
+                    "documentation": {
+                      "type": "string",
+                      "example": "/documentation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": ["Sistema"],
+        "summary": "Health Check",
+        "description": "Verifica se a API está funcionando corretamente",
+        "responses": {
+          "200": {
+            "description": "Sistema funcionando normalmente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Sistema de Produtos API - Online"
+                    },
+                    "author": {
+                      "type": "string",
+                      "example": "José Eduardo Dias Rufino"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/products": {
+      "get": {
+        "tags": ["Produtos"],
+        "summary": "Listar todos os produtos",
+        "description": "Retorna lista completa de todos os produtos ativos no sistema",
+        "responses": {
+          "200": {
+            "description": "Lista de produtos retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    },
+                    "count": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Produtos carregados com sucesso"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "developer": {
+                      "type": "string",
+                      "example": "José Eduardo Dias Rufino"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Produtos"],
+        "summary": "Criar novo produto",
+        "description": "Cadastra um novo produto no sistema com validações completas",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductInput"
+              },
+              "examples": {
+                "produto_exemplo": {
+                  "summary": "Exemplo de produto",
+                  "value": {
+                    "productName": "Smartphone Galaxy S24",
+                    "description": "Smartphone Samsung Galaxy S24 com 128GB de armazenamento e câmera de 50MP",
+                    "color": "preto",
+                    "weight": 0.168,
+                    "category": "eletronico",
+                    "price": 2899.99,
+                    "stockQuantity": 15
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produto criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "created"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Produto criado com sucesso"
+                    },
+                    "productId": {
+                      "type": "string",
+                      "example": "60d5ec49f14a2c001c8e4b8a"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "developer": {
+                      "type": "string",
+                      "example": "José Eduardo Dias Rufino"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação ou dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Produto já existe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/products/{searchParam}": {
+      "get": {
+        "tags": ["Produtos"],
+        "summary": "Buscar produto por ID ou nome",
+        "description": "Busca um produto específico usando ID do MongoDB ou nome do produto",
+        "parameters": [
+          {
+            "name": "searchParam",
+            "in": "path",
+            "required": true,
+            "description": "ID do produto (ObjectId) ou nome do produto",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "por_id": {
+                "summary": "Busca por ID",
+                "value": "60d5ec49f14a2c001c8e4b8a"
+              },
+              "por_nome": {
+                "summary": "Busca por nome",
+                "value": "Smartphone Galaxy S24"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Produto encontrado com sucesso"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "developer": {
+                      "type": "string",
+                      "example": "José Eduardo Dias Rufino"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/products/{id}": {
+      "put": {
+        "tags": ["Produtos"],
+        "summary": "Atualizar produto existente",
+        "description": "Atualiza os dados de um produto existente no sistema",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único do produto (ObjectId do MongoDB)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "60d5ec49f14a2c001c8e4b8a"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductUpdate"
+              },
+              "examples": {
+                "atualizacao_preco": {
+                  "summary": "Atualizar apenas preço",
+                  "value": {
+                    "price": 2699.99
+                  }
+                },
+                "atualizacao_completa": {
+                  "summary": "Atualização completa",
+                  "value": {
+                    "productName": "Smartphone Galaxy S24 Ultra",
+                    "description": "Versão Ultra com 256GB e S Pen incluída",
+                    "price": 3499.99,
+                    "stockQuantity": 8
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "updated"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Produto atualizado com sucesso"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "developer": {
+                      "type": "string",
+                      "example": "José Eduardo Dias Rufino"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Produtos"],
+        "summary": "Remover produto",
+        "description": "Remove um produto do sistema (soft delete - produto fica inativo)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID único do produto (ObjectId do MongoDB)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "60d5ec49f14a2c001c8e4b8a"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto removido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "deleted"
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Produto removido com sucesso"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "developer": {
+                      "type": "string",
+                      "example": "José Eduardo Dias Rufino"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID único do produto",
+            "example": "60d5ec49f14a2c001c8e4b8a"
+          },
+          "productName": {
+            "type": "string",
+            "description": "Nome do produto",
+            "example": "Smartphone Galaxy S24"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição detalhada do produto",
+            "example": "Smartphone Samsung Galaxy S24 com 128GB de armazenamento"
+          },
+          "color": {
+            "type": "string",
+            "description": "Cor do produto",
+            "enum": [
+              "branco",
+              "preto",
+              "azul",
+              "vermelho",
+              "verde",
+              "amarelo",
+              "rosa",
+              "roxo",
+              "laranja",
+              "marrom",
+              "cinza",
+              "bege",
+              "multicolor"
+            ],
+            "example": "preto"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Peso do produto em quilogramas",
+            "minimum": 0.001,
+            "maximum": 1000,
+            "example": 0.168
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria do produto",
+            "enum": [
+              "vestuario",
+              "calcado",
+              "acessorio",
+              "eletronico",
+              "casa",
+              "beleza",
+              "esporte",
+              "livro",
+              "brinquedo",
+              "outros"
+            ],
+            "example": "eletronico"
+          },
+          "price": {
+            "type": "number",
+            "description": "Preço do produto em reais",
+            "minimum": 0.01,
+            "maximum": 999999.99,
+            "example": 2899.99
+          },
+          "formattedPrice": {
+            "type": "string",
+            "description": "Preço formatado em moeda brasileira",
+            "example": "R$ 2.899,99"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de cadastro do produto"
+          },
+          "lastUpdate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da última atualização"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Status ativo/inativo do produto",
+            "example": true
+          },
+          "stockQuantity": {
+            "type": "number",
+            "description": "Quantidade em estoque",
+            "minimum": 0,
+            "example": 15
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp de atualização"
+          }
+        }
+      },
+      "ProductInput": {
+        "type": "object",
+        "required": [
+          "productName",
+          "description",
+          "color",
+          "weight",
+          "category",
+          "price"
+        ],
+        "properties": {
+          "productName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "description": "Nome do produto",
+            "example": "Smartphone Galaxy S24"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 500,
+            "description": "Descrição detalhada do produto",
+            "example": "Smartphone Samsung Galaxy S24 com 128GB de armazenamento"
+          },
+          "color": {
+            "type": "string",
+            "description": "Cor do produto",
+            "enum": [
+              "branco",
+              "preto",
+              "azul",
+              "vermelho",
+              "verde",
+              "amarelo",
+              "rosa",
+              "roxo",
+              "laranja",
+              "marrom",
+              "cinza",
+              "bege",
+              "multicolor"
+            ],
+            "example": "preto"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0.001,
+            "maximum": 1000,
+            "description": "Peso do produto em quilogramas",
+            "example": 0.168
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria do produto",
+            "enum": [
+              "vestuario",
+              "calcado",
+              "acessorio",
+              "eletronico",
+              "casa",
+              "beleza",
+              "esporte",
+              "livro",
+              "brinquedo",
+              "outros"
+            ],
+            "example": "eletronico"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 999999.99,
+            "description": "Preço do produto em reais",
+            "example": 2899.99
+          },
+          "stockQuantity": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Quantidade em estoque (opcional)",
+            "example": 15
+          }
+        }
+      },
+      "ProductUpdate": {
+        "type": "object",
+        "properties": {
+          "productName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "description": "Nome do produto"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 500,
+            "description": "Descrição detalhada do produto"
+          },
+          "color": {
+            "type": "string",
+            "enum": [
+              "branco",
+              "preto",
+              "azul",
+              "vermelho",
+              "verde",
+              "amarelo",
+              "rosa",
+              "roxo",
+              "laranja",
+              "marrom",
+              "cinza",
+              "bege",
+              "multicolor"
+            ],
+            "description": "Cor do produto"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0.001,
+            "maximum": 1000,
+            "description": "Peso do produto em quilogramas"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "vestuario",
+              "calcado",
+              "acessorio",
+              "eletronico",
+              "casa",
+              "beleza",
+              "esporte",
+              "livro",
+              "brinquedo",
+              "outros"
+            ],
+            "description": "Categoria do produto"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 999999.99,
+            "description": "Preço do produto em reais"
+          },
+          "stockQuantity": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Quantidade em estoque"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "message": {
+            "type": "string",
+            "example": "Erro interno do servidor"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "developer": {
+            "type": "string",
+            "example": "José Eduardo Dias Rufino"
+          }
+        }
+      },
+      "ValidationErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "validation_error"
+          },
+          "message": {
+            "type": "string",
+            "example": "Campos obrigatórios faltando: productName, price"
+          },
+          "missingFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["productName", "price"]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "developer": {
+            "type": "string",
+            "example": "José Eduardo Dias Rufino"
+          }
+        }
+      },
+      "NotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "not_found"
+          },
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "null",
+            "example": null
+          },
+          "message": {
+            "type": "string",
+            "example": "Produto não encontrado no sistema"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "developer": {
+            "type": "string",
+            "example": "José Eduardo Dias Rufino"
+          }
+        }
+      },
+      "ConflictResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "conflict"
+          },
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "null",
+            "example": null
+          },
+          "message": {
+            "type": "string",
+            "example": "Já existe um produto com este nome"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "developer": {
+            "type": "string",
+            "example": "José Eduardo Dias Rufino"
+          }
+        }
+      }
+    }
+  }
+}

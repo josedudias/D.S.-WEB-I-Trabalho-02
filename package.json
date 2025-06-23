@@ -1,0 +1,35 @@
+{
+  "name": "sistemas-produtos-api",
+  "version": "2.0.0",
+  "description": "Sistema completo de gerenciamento de produtos para loja de departamentos - Desenvolvido por José Eduardo Dias Rufino",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "production": "NODE_ENV=production node app.js"
+  },
+  "keywords": [
+    "api",
+    "rest",
+    "produtos",
+    "mongodb",
+    "express",
+    "nodejs",
+    "swagger",
+    "loja"
+  ],
+  "author": "José Eduardo Dias Rufino",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.0",
+    "serverless-http": "^3.0.1",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
