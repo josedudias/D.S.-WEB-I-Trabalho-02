@@ -15,7 +15,7 @@
   },
   "servers": [
     {
-      "url": "https://sistemas-produtos-api.onrender.com",
+      "url": "https://d-s-web-i-trabalho-02.onrender.com",
       "description": "Servidor de Produção"
     },
     {
